@@ -36,7 +36,7 @@ extern log_t *logs;
 extern Tcl_Interp *interp;
 extern char ver[], botnetnick[], firewall[], motdfile[], userfile[], helpdir[],
             moddir[], notify_new[], configfile[];
-extern time_t now, online_since;
+extern time_t now, online_since, now2_last;
 extern int backgrd, term_z, con_chan, cache_hit, cache_miss, firewallport,
            default_flags, max_logs, conmask, protect_readonly, make_userfile,
            noshare, ignore_time, max_socks;
@@ -407,6 +407,10 @@ void chanprog()
   /* Now read it */
   if (!readtclprog(configfile))
     fatal(MISC_NOCONFIGFILE, 0);
+
+  /* call localtime() to update timezone and reset misc.c:putlog() time cache */
+  localtime(&now);
+  now2_last = 0;
 
   for (i = 0; i < max_logs; i++) {
     if (logs[i].flags & LF_EXPIRING) {
