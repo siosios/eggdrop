@@ -6727,17 +6727,10 @@ printf "%s\n" "#define BIND_8_COMPAT 1" >>confdefs.h
 
     ;;
     *)
-      if test -r /mach; then
-        # At this point, we're guessing this is NeXT Step.
-
-printf "%s\n" "#define BORGCUBES 1" >>confdefs.h
-
-      else
-        if test -r /cmds; then
-          # Probably QNX.
-          SHLIB_LD="ld -shared"
-          SHLIB_STRIP="touch"
-        fi
+      if test -r /cmds; then
+        # Probably QNX.
+        SHLIB_LD="ld -shared"
+        SHLIB_STRIP="touch"
       fi
     ;;
   esac
