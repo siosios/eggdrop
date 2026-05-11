@@ -626,6 +626,7 @@ Function global_table[] = {
   (Function) & stealth_telnets,   /* int                                 */
   (Function) parse_irc,
   (Function) join_str_array,
+  (Function) splitcn
 };
 
 void init_modules(void)
