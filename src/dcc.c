@@ -1284,7 +1284,10 @@ static void dcc_telnet(int idx, char *buf, int i)
     return;
   }
   /* Buffer data received on this socket. */
-  sockoptions(sock, EGG_OPTION_SET, SOCK_BUFFER);
+  if (!strcmp(dcc[idx].nick, "(webui)"))
+    sockoptions(sock, EGG_OPTION_SET, SOCK_BUFFER | SOCK_WEBUI);
+  else
+    sockoptions(sock, EGG_OPTION_SET, SOCK_BUFFER);
 
   if (port < 1024) {
     putlog(LOG_BOTS, "*", DCC_BADSRC, iptostr(&dcc[i].sockname.addr.sa), port);
@@ -1343,6 +1346,8 @@ void dcc_telnet_hostresolved2(int i, int idx) {
     ident_target_port = getenv("EGGDROP_TEST") ? 1113 : 113;
 
   snprintf(userhost, sizeof userhost, "telnet@%s", dcc[i].host);
+  changeover_dcc(i, &DCC_IDENTWAIT, 0);
+
   /* Skip ident lookup if disabled */
   if (identtimeout <= 0) {
     dcc[i].u.ident_sock = dcc[idx].sock;
@@ -1350,7 +1355,6 @@ void dcc_telnet_hostresolved2(int i, int idx) {
     return;
   }
 
-  changeover_dcc(i, &DCC_IDENTWAIT, 0);
   dcc[i].timeval = now;
   dcc[i].u.ident_sock = dcc[idx].sock;
   sock = -1;
